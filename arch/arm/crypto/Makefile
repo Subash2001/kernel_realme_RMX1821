@@ -57,6 +57,9 @@ chacha-neon-y := chacha-neon-core.o chacha-neon-glue.o
 nhpoly1305-neon-y := nh-neon-core.o nhpoly1305-neon-glue.o
 
 ifdef REGENERATE_ARM_CRYPTO
+
+ccflags-y := -O3
+
 quiet_cmd_perl = PERL    $@
       cmd_perl = $(PERL) $(<) > $(@)
 
