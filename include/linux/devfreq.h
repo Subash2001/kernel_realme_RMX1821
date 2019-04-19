@@ -390,7 +390,7 @@ static inline int devfreq_set_limit(struct devfreq *df, unsigned long min, unsig
 static inline int devfreq_get_limit(struct devfreq *df, unsigned long *min, unsigned long *max)
 {
             return -EINVAL;
-}
+
 #endif /* VENDOR_EDIT */
 static inline int update_devfreq(struct devfreq *devfreq)
 {
