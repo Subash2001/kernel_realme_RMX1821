@@ -33,6 +33,7 @@ static struct task_struct *task_bucket[SHRT_MAX + 1] __cacheline_aligned;
 static DECLARE_WAIT_QUEUE_HEAD(oom_waitq);
 static DECLARE_COMPLETION(reclaim_done);
 static __cacheline_aligned_in_smp DEFINE_RWLOCK(mm_free_lock);
+static DEFINE_RWLOCK(mm_free_lock);
 static int nr_victims;
 static atomic_t needs_reclaim = ATOMIC_INIT(0);
 static atomic_t nr_killed = ATOMIC_INIT(0);
@@ -192,6 +193,20 @@ static void scan_and_kill(void)
 	/* Populate the victims array with tasks sorted by adj and then size */
 	pages_found = find_victims(&nr_found);
 	if (unlikely(!pages_found)) {
+	int i, nr_to_kill = 0, nr_found = 0;
+	unsigned long pages_found = 0;
+
+	/* Hold an RCU read lock while traversing the global process list */
+	rcu_read_lock();
+	for (i = 1; i < ARRAY_SIZE(adjs); i++) {
+		pages_found += find_victims(&nr_found, adjs[i], adjs[i - 1]);
+		if (pages_found >= pages_needed || nr_found == MAX_VICTIMS)
+			break;
+	}
+	rcu_read_unlock();
+
+	/* Pretty unlikely but it can happen */
+	if (unlikely(!nr_found)) {
 		pr_err("No processes available to kill!\n");
 		return;
 	}
@@ -200,6 +215,15 @@ static void scan_and_kill(void)
 	if (pages_found > MIN_FREE_PAGES) {
 		/* First round of processing to weed out unneeded victims */
 		nr_to_kill = process_victims(nr_found);
+	/* First round of victim processing to weed out unneeded victims */
+	nr_to_kill = process_victims(nr_found, pages_needed);
+
+	/*
+	 * Try to kill as few of the chosen victims as possible by sorting the
+	 * chosen victims by size, which means larger victims that have a lower
+	 * adj can be killed in place of smaller victims with a high adj.
+	 */
+	sort(victims, nr_to_kill, sizeof(*victims), victim_size_cmp, NULL);
 
 		/*
 		 * Try to kill as few of the chosen victims as possible by
@@ -256,6 +280,7 @@ static void scan_and_kill(void)
 		pr_info("Timeout hit waiting for victims to die, proceeding\n");
 
 	/* Clean up for future reclaim invocations */
+	wait_for_completion_timeout(&reclaim_done, RECLAIM_EXPIRES);
 	write_lock(&mm_free_lock);
 	reinit_completion(&reclaim_done);
 	nr_victims = 0;
@@ -288,6 +313,7 @@ void simple_lmk_mm_freed(struct mm_struct *mm)
 	if (!read_trylock(&mm_free_lock))
 		return;
 
+	read_lock(&mm_free_lock);
 	for (i = 0; i < nr_victims; i++) {
 		if (victims[i].mm == mm) {
 			victims[i].mm = NULL;
