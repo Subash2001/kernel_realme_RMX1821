@@ -74,6 +74,8 @@ obj-$(CONFIG_HQ_DEVINFO_SUPPORT) 	+= hqdevinfo/
 obj-y				+= schedx.o
 #endif
 
+obj-$(CONFIG_HQ_SYSFS_SUPPORT) 	+= hqsysfs/
+obj-$(CONFIG_BATTERY_SAVER)	+= battery_saver.o
 lkdtm-$(CONFIG_LKDTM)		+= lkdtm_core.o
 lkdtm-$(CONFIG_LKDTM)		+= lkdtm_bugs.o
 lkdtm-$(CONFIG_LKDTM)		+= lkdtm_heap.o
