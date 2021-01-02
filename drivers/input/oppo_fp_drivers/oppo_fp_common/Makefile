@@ -9,7 +9,7 @@ DEFS_PLATFORM = -DCONFIG_OPPO_FINGERPRINT_PLATFORM=6763
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/masp/asfv2/asf_inc
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/masp/asfv2/asf_export_inc
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/masp/asfv2/module
-else ifeq ($(shell echo $(TARGET_PRODUCT) | sed -e 's/_1.*//g'),full_oppo6771)
+else ifeq ($(strip $(CONFIG_MTK_PLATFORM)),"mt6771")
 DEFS_PLATFORM = -DCONFIG_OPPO_FINGERPRINT_PLATFORM=6771
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/masp/asfv2/asf_inc
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/masp/asfv2/asf_export_inc
