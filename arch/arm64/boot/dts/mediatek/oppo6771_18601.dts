@@ -845,7 +845,6 @@
 		pins_cmd_dat {
 			pinmux = <PINMUX_GPIO9__FUNC_GPIO9>;
 			slew-rate = <0>;
-			bias-pull-up = <00>;
 		};
 	};
 	gpio9_gpio_mode: id_output_low {
