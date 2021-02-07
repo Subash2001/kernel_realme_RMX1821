@@ -1603,7 +1603,8 @@ static int inode_doinit_with_dentry(struct inode *inode, struct dentry *opt_dent
 				       -rc, inode->i_sb->s_id, inode->i_ino);
 				if (context != context_onstack)
 					kfree(context);
-				goto out;
+				goto out_unlock;
+
 			}
 			/* Map ENODATA to the default file SID */
 			sid = sbsec->def_sid;
