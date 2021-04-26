@@ -200,7 +200,7 @@ static void scan_and_kill(void)
 	rcu_read_lock();
 	for (i = 1; i < ARRAY_SIZE(adjs); i++) {
 		pages_found += find_victims(&nr_found, adjs[i], adjs[i - 1]);
-		if (pages_found >= pages_needed || nr_found == MAX_VICTIMS)
+		if (pages_found >= MIN_FREE_PAGES || nr_found == MAX_VICTIMS)
 			break;
 	}
 	rcu_read_unlock();
@@ -215,15 +215,6 @@ static void scan_and_kill(void)
 	if (pages_found > MIN_FREE_PAGES) {
 		/* First round of processing to weed out unneeded victims */
 		nr_to_kill = process_victims(nr_found);
-	/* First round of victim processing to weed out unneeded victims */
-	nr_to_kill = process_victims(nr_found, pages_needed);
-
-	/*
-	 * Try to kill as few of the chosen victims as possible by sorting the
-	 * chosen victims by size, which means larger victims that have a lower
-	 * adj can be killed in place of smaller victims with a high adj.
-	 */
-	sort(victims, nr_to_kill, sizeof(*victims), victim_size_cmp, NULL);
 
 		/*
 		 * Try to kill as few of the chosen victims as possible by
@@ -240,6 +231,8 @@ static void scan_and_kill(void)
 		/* Too few pages found, so all the victims need to be killed */
 		nr_to_kill = nr_found;
 	}
+	/* Second round of victim processing to finally select the victims */
+	nr_to_kill = process_victims(nr_to_kill);
 
 	/* Store the final number of victims for simple_lmk_mm_freed() */
 	write_lock(&mm_free_lock);
