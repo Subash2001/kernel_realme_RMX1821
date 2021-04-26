@@ -54,6 +54,14 @@ static void victim_swap(void *lhs_ptr, void *rhs_ptr, int size)
 	swap(*lhs, *rhs);
 }
 
+static bool vtsk_is_duplicate(int vlen, struct task_struct *vtsk)
+{
+	struct victim_info *lhs = (typeof(lhs))lhs_ptr;
+	struct victim_info *rhs = (typeof(rhs))rhs_ptr;
+
+	swap(*lhs, *rhs);
+}
+
 static unsigned long get_total_mm_pages(struct mm_struct *mm)
 {
 	unsigned long pages = 0;
@@ -144,7 +152,7 @@ static unsigned long find_victims(int *vindex)
 		 * killing the larger ones first.
 		 */
 		sort(&victims[old_vindex], *vindex - old_vindex,
-		     sizeof(*victims), victim_cmp, victim_swap, NULL);
+		     sizeof(*victims), victim_cmp, victim_swap,);
 
 		/* Stop when we are out of space or have enough pages found */
 		if (*vindex == MAX_VICTIMS || pages_found >= MIN_FREE_PAGES) {
@@ -215,7 +223,6 @@ static void scan_and_kill(void)
 	if (pages_found > MIN_FREE_PAGES) {
 		/* First round of processing to weed out unneeded victims */
 		nr_to_kill = process_victims(nr_found);
-<<<<<<< HEAD
 
 		/*
 		 * Try to kill as few of the chosen victims as possible by
@@ -226,28 +233,12 @@ static void scan_and_kill(void)
 		sort(victims, nr_to_kill, sizeof(*victims), victim_cmp,
 		     victim_swap);
 
-=======
-
-		/*
-		 * Try to kill as few of the chosen victims as possible by
-		 * sorting the chosen victims by size, which means larger
-		 * victims that have a lower adj can be killed in place of
-		 * smaller victims with a high adj.
-		 */
-		sort(victims, nr_to_kill, sizeof(*victims), victim_cmp, NULL);
-
->>>>>>> 8587d1761a81... simple_lmk: Skip victim reduction when all victims need to be killed
 		/* Second round of processing to finally select the victims */
 		nr_to_kill = process_victims(nr_to_kill);
 	} else {
 		/* Too few pages found, so all the victims need to be killed */
 		nr_to_kill = nr_found;
 	}
-<<<<<<< HEAD
-	/* Second round of victim processing to finally select the victims */
-	nr_to_kill = process_victims(nr_to_kill);
-=======
->>>>>>> 8587d1761a81... simple_lmk: Skip victim reduction when all victims need to be killed
 
 	/* Store the final number of victims for simple_lmk_mm_freed() */
 	write_lock(&mm_free_lock);
