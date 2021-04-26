@@ -312,7 +312,6 @@ void simple_lmk_mm_freed(struct mm_struct *mm)
 	if (!read_trylock(&mm_free_lock))
 		return;
 
-	read_lock(&mm_free_lock);
 	for (i = 0; i < nr_victims; i++) {
 		if (victims[i].mm == mm) {
 			victims[i].mm = NULL;
