@@ -53,10 +53,10 @@ static const unsigned short adjs[] = {
 };
 
 static struct victim_info victims[MAX_VICTIMS] __cacheline_aligned_in_smp;
+static struct task_struct *task_bucket[SHRT_MAX + 1] __cacheline_aligned;
 static DECLARE_WAIT_QUEUE_HEAD(oom_waitq);
 static DECLARE_COMPLETION(reclaim_done);
 static __cacheline_aligned_in_smp DEFINE_RWLOCK(mm_free_lock);
->>>>>>> b8a1387ca61a... simple_lmk: Cacheline-align the victims array and mm_free_lock on SMP
 static int nr_victims;
 static atomic_t needs_reclaim = ATOMIC_INIT(0);
 static atomic_t nr_killed = ATOMIC_INIT(0);
@@ -188,6 +188,17 @@ static unsigned long find_victims(int *vindex)
 	}
 	rcu_read_unlock();
 
+		/* Stop when we are out of space or have enough pages found */
+		if (*vindex == MAX_VICTIMS || pages_found >= MIN_FREE_PAGES) {
+			/* Zero out any remaining buckets we didn't touch */
+			if (i > min_adj)
+				memset(&task_bucket[min_adj], 0,
+				       (i - min_adj) * sizeof(*task_bucket));
+			break;
+		}
+	}
+	rcu_read_unlock();
+
 	return pages_found;
 }
 
@@ -236,8 +247,9 @@ static void scan_and_kill(void)
 	}
 	rcu_read_unlock();
 
-	/* Pretty unlikely but it can happen */
-	if (unlikely(!nr_found)) {
+	/* Populate the victims array with tasks sorted by adj and then size */
+	pages_found = find_victims(&nr_found);
+	if (unlikely(!pages_found)) {
 		pr_err("No processes available to kill!\n");
 		return;
 	}
