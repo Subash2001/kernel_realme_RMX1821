@@ -242,7 +242,6 @@ config MACH_MT6771
 	select MTK_TIMER_APXGPT
 	select DEVAPC_LEGACY
 	select OVERLAY_FS
-	select MTK_SYSTRACKER_V2
 	select MTK_SECURITY_SW_SUPPORT
 	help
 	  This enables support for MediaTek MT6771
