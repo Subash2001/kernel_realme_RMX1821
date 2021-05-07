@@ -632,7 +632,7 @@ void core_gesture_init(struct core_fr_data *fr_data)
 		input_set_capability(input_dev, EV_KEY, KEY_GESTURE_V);
 		input_set_capability(input_dev, EV_KEY, KEY_GESTURE_Z);
 		input_set_capability(input_dev, EV_KEY, KEY_GESTURE_C);
-		input_set_capability(input_dev, EV_KEY, KEY_F4);
+		input_set_capability(input_dev, EV_KEY, KEY_WAKEUP);
 
 		__set_bit(KEY_POWER, input_dev->keybit);
 		__set_bit(KEY_GESTURE_UP, input_dev->keybit);

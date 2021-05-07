@@ -1062,7 +1062,7 @@ void nvt_ts_wakeup_gesture_report(uint8_t gesture_id, uint8_t *data, struct gest
 			gesture->Point_4th.x, gesture->Point_4th.y);
 
 	if (gesture->gesture_type != UnkownGesture) {
-		keycode = KEY_F4;
+		keycode = KEY_WAKEUP;
 
 		input_report_key(ts->input_dev, keycode, 1);
 		input_sync(ts->input_dev);
@@ -1872,7 +1872,7 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 #if WAKEUP_GESTURE
 	ts->gesture_enable = 0;
 	memset(&ts->gesture, 0, sizeof(struct gesture_info));
-	input_set_capability(ts->input_dev, EV_KEY, KEY_F4);
+	input_set_capability(ts->input_dev, EV_KEY, KEY_WAKEUP);
 #endif
 	memset(&ts->oppo_debug_info, 0, sizeof(struct oppo_debug_info));
 
