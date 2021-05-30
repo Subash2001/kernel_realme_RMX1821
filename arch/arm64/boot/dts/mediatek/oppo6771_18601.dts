@@ -54,6 +54,11 @@
 	firmware {
 		android {
 			compatible = "android,firmware";
+			vbmeta {
+				compatible = "android,vbmeta";
+				parts = "vbmeta,boot,system,vendor,recovery";
+			};
+
 			fstab {
 				compatible = "android,fstab";
 				system {
@@ -61,7 +66,7 @@
 					dev = "/dev/block/platform/bootdevice/by-name/system";
 					type = "ext4";
 					mnt_flags = "ro";
-					fsmgr_flags = "wait,verify";
+					fsmgr_flags = "wait,avb";
 				};
 
 				vendor {
@@ -69,7 +74,7 @@
 					dev = "/dev/block/platform/bootdevice/by-name/vendor";
 					type = "ext4";
 					mnt_flags = "ro";
-					fsmgr_flags = "wait,verify";
+					fsmgr_flags = "wait,avb";
 				};
 
 #ifdef CONFIG_TARGET_COPY_OUT_ODM
