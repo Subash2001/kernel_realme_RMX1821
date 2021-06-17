@@ -95,11 +95,6 @@
 
 #define DISPPR_HWOP(string, args...)
 
-#ifndef CONFIG_MTK_AEE_FEATURE
-# define aee_kernel_warning_api(...)
-# define aee_kernel_exception(...)
-#endif
-
 #define disp_aee_print(string, args...)					\
 	do {								\
 		char disp_name[100];					\
