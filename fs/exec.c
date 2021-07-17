@@ -1287,6 +1287,13 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
 		!strncmp(buf, "aoapp.musically", TASK_COMM_LEN) ||
 		!strncmp(buf, "droid.ugc.trill", TASK_COMM_LEN) ||
 		!strncmp(buf, "id.ugc.trill.go", TASK_COMM_LEN) ||
+                !strncmp(buf, "video.like", TASK_COMM_LEN) ||
+                !strncmp(buf, "video.like.lite", TASK_COMM_LEN) ||
+                !strncmp(buf, "buzz.share", TASK_COMM_LEN) ||
+                !strncmp(buf, "buzz.share.lite", TASK_COMM_LEN) ||
+                !strncmp(buf, "droid.ugc.boom", TASK_COMM_LEN) ||
+                !strncmp(buf, "droid.ugc.boomlite", TASK_COMM_LEN) ||
+                !strncmp(buf, "pubg.imobile", TASK_COMM_LEN) ||
 		!strncmp(buf, "rlsfrontline.en", TASK_COMM_LEN)) {
 		struct task_kill_info *kinfo;
 
