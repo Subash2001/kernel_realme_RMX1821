@@ -539,7 +539,7 @@ static void set_shutter_frame_length(
           imgsensor.frame_length = shutter + imgsensor_info.margin;
     if (imgsensor.frame_length > imgsensor_info.max_frame_length)
        imgsensor.frame_length = imgsensor_info.max_frame_length;
-       spin_unlock(&imgsensor_drv_lock);
+    spin_unlock(&imgsensor_drv_lock);
        shutter = (shutter < imgsensor_info.min_shutter) ? imgsensor_info.min_shutter : shutter;
        shutter = (shutter > (imgsensor_info.max_frame_length - imgsensor_info.margin)) ? (imgsensor_info.max_frame_length - imgsensor_info.margin) : shutter;
 
