@@ -4439,7 +4439,7 @@ static int oppo_chg_get_dyna_aicl_result(void)
 }
 #endif /* CONFIG_OPPO_SHORT_C_BATT_CHECK */
 
-enum charger_type oppo_mt6370_chr_type_check()
+enum charger_type oppo_mt6370_chr_type_check(void)
 {
 	return chip_chg_data->chg_type;
 }
