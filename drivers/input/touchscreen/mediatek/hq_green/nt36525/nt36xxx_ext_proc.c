@@ -649,7 +649,7 @@ static int32_t c_data_limit_show(struct seq_file *m, void *v)
 
 	/* Parsing criteria from dts */
 	if(of_property_read_bool(np, "novatek,mp-support-dt")) {
-		snprintf(mpcriteria, PAGE_SIZE, "novatek-mp-criteria-%04X", ts->nvt_pid);
+		snprintf(mpcriteria, sizeof(mpcriteria), "novatek-mp-criteria-%04X", ts->nvt_pid);
 		if (nvt_mp_parse_dt(np, mpcriteria, m)) {
 			mutex_unlock(&ts->lock);
 			NVT_ERR("mp parse device tree failed!\n");
