@@ -49,6 +49,10 @@ static void *seq_buf_alloc(unsigned long size)
 		buf = kmalloc(size, GFP_KERNEL | __GFP_NOWARN);
 	return buf;
 #endif
+	if (unlikely(size > MAX_RW_COUNT))
+		return NULL;
+
+	return kvmalloc(size, GFP_KERNEL);
 }
 
 /**
