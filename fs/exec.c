@@ -1282,10 +1282,7 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
 	mtk_pidmap_update(tsk);
 
 #ifdef CONFIG_PROC_APPBLOCKER
-	if (!strncmp(buf, "com.tencent.ig", TASK_COMM_LEN) ||
-		!strncmp(buf, ".tencent.iglite", TASK_COMM_LEN) ||
-		!strncmp(buf, "aoapp.musically", TASK_COMM_LEN) ||
-		!strncmp(buf, "droid.ugc.trill", TASK_COMM_LEN) ||
+	if (!strncmp(buf, "droid.ugc.trill", TASK_COMM_LEN) ||
 		!strncmp(buf, "id.ugc.trill.go", TASK_COMM_LEN) ||
                 !strncmp(buf, "video.like", TASK_COMM_LEN) ||
                 !strncmp(buf, "video.like.lite", TASK_COMM_LEN) ||
@@ -1293,10 +1290,6 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
                 !strncmp(buf, "buzz.share.lite", TASK_COMM_LEN) ||
                 !strncmp(buf, "droid.ugc.boom", TASK_COMM_LEN) ||
                 !strncmp(buf, "droid.ugc.boomlite", TASK_COMM_LEN) ||
-                !strncmp(buf, "com.pubg.imobile", TASK_COMM_LEN) ||
-                !strncmp(buf, "com.dts.freefiremax", TASK_COMM_LEN) |
-                !strncmp(buf, "com.activision.callofduty.shooter", TASK_COMM_LEN) ||
-                !strncmp(buf, "com.pubg.krmobile", TASK_COMM_LEN) ||
 		!strncmp(buf, "rlsfrontline.en", TASK_COMM_LEN)) {
 		struct task_kill_info *kinfo;
 
