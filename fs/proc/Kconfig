@@ -98,9 +98,3 @@ config OPPO_FG_OPT
 	  Add foreground process optimize support to promote performance .
 #endif /*VENDOR_EDIT*/
 
-config PROC_APPBLOCKER
-	bool "Block apps from using this kernel"
-	default y
-	help
-	  Provides a successful and safe way to block certain apps being used under
-          your kernel.
