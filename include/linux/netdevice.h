@@ -3435,6 +3435,8 @@ static inline void dev_put(struct net_device *dev)
         #endif
     }
     #endif
+	if (dev)
+		this_cpu_dec(*dev->pcpu_refcnt);
 }
 
 /**
@@ -3479,6 +3481,8 @@ static inline void dev_hold(struct net_device *dev)
         #endif
     }
     #endif
+	if (dev)
+		this_cpu_inc(*dev->pcpu_refcnt);
 }
 
 /* Carrier loss detection, dial on demand. The functions netif_carrier_on
